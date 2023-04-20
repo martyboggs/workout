@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        body {
+            margin-top: 30px;
+        }
+        body, 
+        button {
+            font-family: Poppins;
+        }
+        .steps > div {
+            display: none;
+        }
+        .steps {
+            height: 47.27px;
+        }
+        div {
+            text-align: center;
+        }
+        div, button {
+            font-size: 32px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 20px 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="steps"></div>
+<button class="next">Start</button>
+<div class="timer"></div>
+<script>
+var data = {
+    regular: {number: 0, name: 'Regular Push-ups', rest: 25},
+    rotation: {number: -4, name: 'Push-up & Rotation', rest: 25},
+    wide: {number: -2, name: 'Wide Arm Push-ups', rest: 25},
+    diamond: {number: -4, name: 'Diamond Push-ups', rest: 25},
+    staggered: {number: -4, name: 'Staggered Push-ups', rest: 25},
+    hindu: {number: -6, name: 'Hindu Push-ups', rest: 25},
+    spiderman: {number: -6, name: 'Spiderman Push-ups', rest: 25},
+    reverse: {number: -6, name: 'Reverse Push-ups', rest: 25},
+    decline: {number: -6, name: 'Decline Push-ups', rest: 25},
+
+    situps: {number: 0, name: 'Sit-ups', rest: 25},
+    mountain: {number: 0, name: 'Mountain Climbers', rest: 25},
+    raises: {number: 4, name: 'Leg Raises', rest: 25},
+    plank: {time: 50, name: 'Plank', rest: 25},
+    sidePlank1: {time: 26, name: 'Side Plank Left', rest: 25},
+    sidePlank2: {time: 26, name: 'Side Plank Right', rest: 25},
+    russian: {number: 2, name: 'Russian Twist', rest: 25},
+    butt: {number: 2, name: 'Butt Bridge', rest: 25},
+    side: {number: -2, name: 'Side Bridge', rest: 25},
+    v: {number: -4, name: 'V-up', rest: 25},
+    crossover: {number: 2, name: 'Crossover Crunch', rest: 25},
+    bicycle: {number: 2, name: 'Bicycle Crunch', rest: 25},
+    crunchRaise: {number: 0, name: 'Crunches with Legs Raised', rest: 25},
+    spine1: {time: 30, name: 'Spine Lumbar Twist Stretch Left', rest: 10},
+    spine2: {time: 30, name: 'Spine Lumbar Twist Stretch Right', rest: 10},
+
+    jumping: {time: 30, name: 'Jumping Jacks', rest: 25},
+    shoulder: {time: 30, name: 'Shoulder Stretch', rest: 10},
+    circles: {number: 2, name: 'Arm Circles', rest: 25},
+    forearm: {time: 30, name: 'Forearm Stretch', rest: 10},
+    cobra: {time: 30, name: 'Cobra Stretch', rest: 10},
+    chest: {time: 30, name: 'Chest Stretch', rest: 10},
+    done: {time: '', name: 'You Did It!'},
+};
+var timer = '';
+var step = 0;
+var firstStep = true;
+var resting = false;
+var sets;
+var interval;
+var day = Date.now() / 1000 / 60 / 60 / 24;
+var timerEl = document.querySelector('.timer');
+var button = document.querySelector('button');
+document.querySelector('.steps').innerHTML = getWorkout(day / 4 - 4850);
+button.addEventListener('click', nextStep);
+
+function resetTimer() {
+    clearInterval(interval);
+    interval = setInterval(function () {
+        if (!isNaN(timer) && timer > 0) {
+            timer -= 1;
+        }
+        timerEl.innerHTML = timer;
+        if ((resting || data[sets[step]].time) && timer === 0) {
+            nextStep();
+        }
+    }, 1000);
+}
+
+function nextStep(e) {
+    if (!resting && !firstStep) {
+        if (step < sets.length - 1) {
+            step += 1;
+        } else {
+            return;
+        }
+    }
+    firstStep = false;
+    var divs = document.querySelectorAll('.steps > div');
+    if (step < divs.length) {
+        if (!resting) {
+            divs.forEach((el, i) => {
+                if (i === step) {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+            
+            timer = sets[step - 1] ? data[sets[step - 1]].rest : 10;
+            resting = true;
+        } else {
+            timer = data[sets[step]].time || '';
+            resting = false;
+        }
+        if (!resting) {
+            button.innerHTML = 'Done';
+        } else {
+            button.innerHTML = 'Skip';
+        }
+        timerEl.innerHTML = timer;
+        resetTimer();
+    }
+}
+
+function getWorkout(num) {
+    sets = ['jumping', 'circles', 'forearm', 'regular', 'rotation'];
+    var specialPushups = ['wide', 'diamond', 'staggered', 'hindu', 'spiderman', 'reverse', 'decline'];
+    var random = Math.floor(Math.random() * specialPushups.length);
+    sets.push(specialPushups.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * specialPushups.length);
+    sets.push(specialPushups.splice(random, 1)[0]);
+    sets.push('regular');
+    sets.push('rotation');
+    random = Math.floor(Math.random() * specialPushups.length);
+    sets.push(specialPushups.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * specialPushups.length);
+    sets.push(specialPushups.splice(random, 1)[0]);
+    sets.splice(3, 0, sets[sets.length - 1]);
+    sets.splice(3, 0, (sets[sets.length - 2]));
+    sets = sets.concat(['shoulder', 'cobra', 'chest', 'done']);
+    var html = '';
+    num = Math.round(num);
+    if (num % 2 !== 0) {
+        num += 1;
+    }
+    var add2 = sets.reduce((p, c) => p + num - data[c].number, 0) / num < 7.944;
+    for (var i = 0; i < sets.length; i += 1) {
+        html += '<div>' + data[sets[i]].name + ' ' + (data[sets[i]].hasOwnProperty('number') ? (num + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)) : data[sets[i]].time + ' Seconds') + '</div>';
+    }
+    return html;
+}
+</script>
+</body>
+</html>
