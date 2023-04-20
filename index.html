@@ -163,7 +163,7 @@ function getWorkout(num) {
     }
     var add2 = sets.reduce((p, c) => p + num - data[c].number, 0) / num < 7.944;
     for (var i = 0; i < sets.length; i += 1) {
-        var info;
+        var info = '';
         if (data[sets[i]].hasOwnProperty('number')) {
             info = num + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)
         } else if (data[sets[i]].time) {
