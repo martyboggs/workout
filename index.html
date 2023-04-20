@@ -74,7 +74,7 @@ var data = {
     forearm: {time: 30, name: 'Forearm Stretch', rest: 10},
     cobra: {time: 30, name: 'Cobra Stretch', rest: 10},
     chest: {time: 30, name: 'Chest Stretch', rest: 10},
-    done: {time: '', name: 'You Did It!'},
+    done: {name: 'You Did It!'},
 };
 var timer = '';
 var step = 0;
@@ -163,7 +163,13 @@ function getWorkout(num) {
     }
     var add2 = sets.reduce((p, c) => p + num - data[c].number, 0) / num < 7.944;
     for (var i = 0; i < sets.length; i += 1) {
-        html += '<div>' + data[sets[i]].name + ' ' + (data[sets[i]].hasOwnProperty('number') ? (num + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)) : data[sets[i]].time + ' Seconds') + '</div>';
+        var info;
+        if (data[sets[i]].hasOwnProperty('number')) {
+            info = num + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)
+        } else if (data[sets[i]].time) {
+            info = data[sets[i]].time + ' Seconds';
+        }
+        html += '<div>' + data[sets[i]].name + ' ' + info + '</div>';
     }
     return html;
 }
