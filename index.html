@@ -38,6 +38,7 @@
 <body>
 <div class="steps"></div>
 <button class="next">Start</button>
+<div class="action"></div>
 <div class="timer"></div>
 <script>
 var data = {
@@ -82,8 +83,9 @@ var resting = false;
 var sets;
 var interval;
 var day = Date.now() / 1000 / 60 / 60 / 24;
-var timerEl = document.querySelector('.timer');
 var button = document.querySelector('button');
+var action = document.querySelector('.action');
+var timerEl = document.querySelector('.timer');
 document.querySelector('.steps').innerHTML = getWorkout(day / 4 - 4850);
 button.addEventListener('click', nextStep);
 
@@ -128,8 +130,10 @@ function nextStep(e) {
         }
         if (!resting) {
             button.innerHTML = 'Done';
+            action.innerHTML = '';
         } else {
             button.innerHTML = 'Skip';
+            action.innerHTML = 'Rest';
         }
         timerEl.innerHTML = timer;
         resetTimer();
