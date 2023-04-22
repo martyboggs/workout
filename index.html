@@ -12,8 +12,15 @@
     <style>
         body {
             margin-top: 30px;
+            background: url(bg.jpg) white 0% 0% / cover;
         }
-        body, 
+        .workout {
+            margin: 0 auto;
+            max-width: 500px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+        }
+        body,
         button {
             font-family: Poppins;
         }
@@ -37,10 +44,12 @@
     </style>
 </head>
 <body>
-<div class="steps"></div>
-<button class="next">Start</button>
-<div class="action"></div>
-<div class="timer"></div>
+<div class="workout">
+    <div class="steps"></div>
+    <button class="next">Start</button>
+    <div class="action"></div>
+    <div class="timer"></div>
+</div>
 <script>
 var data = {
     regular: {number: 0, name: 'Regular Push-ups', rest: 25},
@@ -113,15 +122,19 @@ function nextStep(e) {
     if (firstStep) {
         go = new Howl({
             src: ['go.m4a'],
+            volume: 0.4
         });
         rest = new Howl({
             src: ['rest.m4a'],
+            volume: 0.9
         });
         count = new Howl({
             src: ['321.m4a'],
+            volume: 0.4
         });
         congrats = new Howl({
             src: ['congrats.m4a'],
+            volume: 1
         });
     }
     if (!resting && !firstStep) {
