@@ -96,14 +96,14 @@ button.addEventListener('click', nextStep);
 function resetTimer() {
     clearInterval(interval);
     interval = setInterval(function () {
-        if (timer !== '' && timer > -1) {
+        if (timer !== '' && timer > 0) {
             timer -= 1;
         }
         timerEl.innerHTML = timer;
         if (resting && timer === 3) {
             count.play()
         }
-        if ((resting || data[sets[step]].time) && timer === -1) {
+        if ((resting || data[sets[step]].time) && timer === 0) {
             nextStep();
         }
     }, 1000);
