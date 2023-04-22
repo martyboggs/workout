@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="howler.min.js"></script>
     <title>Document</title>
     <style>
         body {
@@ -68,13 +69,13 @@ var data = {
     spine1: {time: 30, name: 'Spine Lumbar Twist Stretch Left', rest: 10},
     spine2: {time: 30, name: 'Spine Lumbar Twist Stretch Right', rest: 10},
 
-    jumping: {time: 30, name: 'Jumping Jacks', rest: 25},
+    jumping: {time: 30, name: 'Jumping Jacks', rest: 10},
     shoulder: {time: 30, name: 'Shoulder Stretch', rest: 10},
-    circles: {number: 2, name: 'Arm Circles', rest: 25},
+    circles: {number: 2, name: 'Arm Circles', rest: 10},
     forearm: {time: 30, name: 'Forearm Stretch', rest: 10},
     cobra: {time: 30, name: 'Cobra Stretch', rest: 10},
     chest: {time: 30, name: 'Chest Stretch', rest: 10},
-    done: {name: 'You Did It!'},
+    congrats: {name: 'You Did It!'},
 };
 var timer = '';
 var step = 0;
@@ -82,6 +83,7 @@ var firstStep = true;
 var resting = false;
 var sets;
 var interval;
+var go, rest, count, congrats;
 var button = document.querySelector('button');
 var action = document.querySelector('.action');
 var timerEl = document.querySelector('.timer');
@@ -94,17 +96,34 @@ button.addEventListener('click', nextStep);
 function resetTimer() {
     clearInterval(interval);
     interval = setInterval(function () {
-        if (!isNaN(timer) && timer > 0) {
+        if (timer !== '' && timer > -1) {
             timer -= 1;
         }
         timerEl.innerHTML = timer;
-        if ((resting || data[sets[step]].time) && timer === 0) {
+        if (resting && timer === 3) {
+            count.play()
+        }
+        if ((resting || data[sets[step]].time) && timer === -1) {
             nextStep();
         }
     }, 1000);
 }
 
 function nextStep(e) {
+    if (firstStep) {
+        go = new Howl({
+            src: ['go.m4a'],
+        });
+        rest = new Howl({
+            src: ['rest.m4a'],
+        });
+        count = new Howl({
+            src: ['321.m4a'],
+        });
+        congrats = new Howl({
+            src: ['congrats.m4a'],
+        });
+    }
     if (!resting && !firstStep) {
         if (step < sets.length - 1) {
             step += 1;
@@ -112,7 +131,7 @@ function nextStep(e) {
             return;
         }
     }
-    firstStep = false;
+
     var divs = document.querySelectorAll('.steps > div');
     if (step < divs.length) {
         if (!resting) {
@@ -138,8 +157,21 @@ function nextStep(e) {
             action.innerHTML = 'Rest';
         }
         timerEl.innerHTML = timer;
+        if (sets[step] === 'congrats') {
+            congrats.play();
+            button.innerHTML = 'Done';
+            action.innerHTML = '';
+            timerEl.innerHTML = '';
+            button.removeEventListener('click', nextStep);
+            return clearInterval(interval);
+        } else if (resting) {
+            rest.play();
+        } else {
+            go.play();
+        }
         resetTimer();
     }
+    firstStep = false;
 }
 
 function getWorkout(num) {
@@ -157,7 +189,7 @@ function getWorkout(num) {
     sets.push(specialPushups.splice(random, 1)[0]);
     sets.splice(3, 0, sets[sets.length - 1]);
     sets.splice(3, 0, (sets[sets.length - 2]));
-    sets = sets.concat(['shoulder', 'cobra', 'chest', 'done']);
+    sets = sets.concat(['shoulder', 'cobra', 'chest', 'congrats']);
     var html = '';
     num = Math.round(num);
     if (num % 2 !== 0) {
