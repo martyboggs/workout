@@ -17,9 +17,10 @@
         }
         .workout {
             margin: 0 auto;
+            padding: 20px;
             max-width: 500px;
-            background: rgba(0,0,0,0.5);
-            color: white;
+            background: #ffedd3;
+            color: black;
         }
         body,
         button {
@@ -28,8 +29,11 @@
         .steps > div {
             display: none;
         }
+        .action, .timer {
+            height: 48px;
+        }
         .steps {
-            height: 80px;
+            height: 48px;
         }
         div {
             text-align: center;
@@ -249,7 +253,7 @@ function pushupWorkout(level) {
 }
 
 function pullupWorkout(level) {
-    sets = ['pullups'];
+    sets = ['jumping', 'circles', 'forearm', 'pullups'];
     var special = ['mixedGrip','narrowGrip','wideGrip','commando','towel','clapping','side','archer','typewriter','headBanger','lPullups','chest','muscle'];
     var random = Math.floor(Math.random() * special.length);
     sets.push(special.splice(random, 1)[0]);
