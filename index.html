@@ -63,6 +63,21 @@ var data = {
     reverse: {number: -6, name: 'Reverse Push-ups', rest: 25},
     decline: {number: -6, name: 'Decline Push-ups', rest: 25},
 
+    pullups: {number: 0, name: 'Regular Pull-Ups', rest: 25},
+    mixedGrip: {number: -2, name: 'Mixed Grip Pull-Ups', rest: 25},
+    narrowGrip: {number: -2, name: 'Narrow Grip Pull-Ups', rest: 25},
+    wideGrip: {number: -2, name: 'Wide Grip Pull-Ups', rest: 25},
+    commando: {number: -2, name: 'Commando Pull-Ups', rest: 25},
+    towel: {number: -2, name: 'Towel Pull-Ups', rest: 25},
+    side: {number: -2, name: 'Side Pull-Ups', rest: 25},
+    archer: {number: -2, name: 'Archer Pull-Ups', rest: 25},
+    typewriter: {number: -2, name: 'Typewriter Pull-Ups', rest: 25},
+    headBanger: {number: -2, name: 'Headbanger Pull-Ups', rest: 25},
+    lPullups: {number: -2, name: 'L Pull-Ups', rest: 25},
+    chest: {number: -2, name: 'Chest Pull-Ups', rest: 25},
+    muscle: {number: -4, name: 'Muscle Ups', rest: 25},
+    clapping: {number: -4, name: 'Clapping Pull-Ups', rest: 25},
+
     situps: {number: 0, name: 'Sit-ups', rest: 25},
     mountain: {number: 0, name: 'Mountain Climbers', rest: 25},
     raises: {number: 4, name: 'Leg Raises', rest: 25},
@@ -100,7 +115,14 @@ var timerEl = document.querySelector('.timer');
 var day = Date.now() / 1000 / 60 / 60 / 24;
 var urlParams = new URLSearchParams(window.location.search);
 var level = urlParams.get('level');
-document.querySelector('.steps').innerHTML = getWorkout(level || (day / 4 - 4850));
+var type = urlParams.get('type');
+if (type === 'pushup') {
+    document.querySelector('.steps').innerHTML = pushupWorkout(level || (day / 4 - 4850));
+} else if (type === 'pullup') {
+    document.querySelector('.steps').innerHTML = pullupWorkout(level || (day / 4 - 4850));
+} else {
+    document.querySelector('.steps').innerHTML = pushupWorkout(level || (day / 4 - 4850));
+}
 button.addEventListener('click', nextStep);
 
 function resetTimer() {
@@ -188,7 +210,7 @@ function nextStep(e) {
     firstStep = false;
 }
 
-function getWorkout(num) {
+function pushupWorkout(level) {
     sets = ['jumping', 'circles', 'forearm', 'regular', 'rotation'];
     var specialPushups = ['wide', 'diamond', 'staggered', 'hindu', 'spiderman', 'reverse', 'decline'];
     var random = Math.floor(Math.random() * specialPushups.length);
@@ -205,15 +227,50 @@ function getWorkout(num) {
     sets.splice(3, 0, (sets[sets.length - 2]));
     sets = sets.concat(['shoulder', 'cobra', 'chest', 'congrats']);
     var html = '';
-    num = Math.round(num);
-    if (num % 2 !== 0) {
-        num += 1;
+    level = Math.round(level);
+
+    if (level % 2 !== 0) {
+        level += 1;
     }
-    var add2 = sets.reduce((p, c) => p + num - data[c].number, 0) / num < 7.944;
+    // add2 true or false, based on level and exercise. not sure why
+    var add2 = sets.reduce((p, c) => p + level - data[c].levelber, 0) / level < 7.944;
     for (var i = 0; i < sets.length; i += 1) {
         var info = '';
         if (data[sets[i]].hasOwnProperty('number')) {
-            info = num + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)
+            info = level + data[sets[i]].number + (i === 2 && add2 ? 2 : 0)
+        } else if (data[sets[i]].time) {
+            info = data[sets[i]].time + ' Seconds';
+        }
+        html += '<div>' + data[sets[i]].name + ' ' + info + '</div>';
+    }
+    return html;
+}
+
+function pullupWorkout(level) {
+    sets = ['pullups'];
+    var special = ['mixedGrip','narrowGrip','wideGrip','commando','towel','clapping','side','archer','typewriter','headBanger','lPullups','chest','muscle'];
+    var random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    // sets.push('regular');
+    // sets.push('rotation');
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    sets.splice(3, 0, sets[sets.length - 1]);
+    sets.splice(3, 0, (sets[sets.length - 2]));
+    sets = sets.concat(['shoulder', 'cobra', 'chest', 'congrats']);
+    var html = '';
+    level = Math.round(level);
+    if (level % 2 !== 0) {
+        level += 1;
+    }
+    for (var i = 0; i < sets.length; i += 1) {
+        var info = '';
+        if (data[sets[i]].hasOwnProperty('number')) {
+            info = level + data[sets[i]].number;
         } else if (data[sets[i]].time) {
             info = data[sets[i]].time + ' Seconds';
         }
