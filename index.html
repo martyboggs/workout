@@ -120,6 +120,8 @@ if (type === 'pushup') {
     document.querySelector('.steps').innerHTML = pushupWorkout(level || (day / 4 - 4850));
 } else if (type === 'pullup') {
     document.querySelector('.steps').innerHTML = pullupWorkout(level || (day / 4 - 4850));
+} else if (type === 'situp') {
+    document.querySelector('.steps').innerHTML = situpWorkout(level || (day / 4 - 4850));
 } else {
     document.querySelector('.steps').innerHTML = pushupWorkout(level || (day / 4 - 4850));
 }
@@ -249,6 +251,39 @@ function pushupWorkout(level) {
 function pullupWorkout(level) {
     sets = ['pullups'];
     var special = ['mixedGrip','narrowGrip','wideGrip','commando','towel','clapping','side','archer','typewriter','headBanger','lPullups','chest','muscle'];
+    var random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    // sets.push('regular');
+    // sets.push('rotation');
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    random = Math.floor(Math.random() * special.length);
+    sets.push(special.splice(random, 1)[0]);
+    sets.splice(3, 0, sets[sets.length - 1]);
+    sets.splice(3, 0, (sets[sets.length - 2]));
+    sets = sets.concat(['shoulder', 'cobra', 'chest', 'congrats']);
+    var html = '';
+    level = Math.round(level);
+    if (level % 2 !== 0) {
+        level += 1;
+    }
+    for (var i = 0; i < sets.length; i += 1) {
+        var info = '';
+        if (data[sets[i]].hasOwnProperty('number')) {
+            info = level + data[sets[i]].number;
+        } else if (data[sets[i]].time) {
+            info = data[sets[i]].time + ' Seconds';
+        }
+        html += '<div>' + data[sets[i]].name + ' ' + info + '</div>';
+    }
+    return html;
+}
+
+function situpWorkout(level) {
+    sets = ['situps'];
+    var special = ['mountain','raises','plank','sidePlank1','sidePlank2','russian','butt','v','crossover','bicycle','crunchRaise','spine1','spine2'];
     var random = Math.floor(Math.random() * special.length);
     sets.push(special.splice(random, 1)[0]);
     random = Math.floor(Math.random() * special.length);
