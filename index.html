@@ -110,6 +110,17 @@ var data = {
     cobra: {time: 30, name: 'Cobra Stretch', rest: 10},
     chest: {time: 30, name: 'Chest Stretch', rest: 10},
     congrats: {name: 'You Did It!'},
+
+    // kettle
+    kettleWarmup: {time: 30, name: 'Stretch arms', rest: 10},
+    kettleCurls: {time: 40, name: 'Bicep Curls', rest: 20},
+    kettleCurlHolds: {time: 40, name: 'Bicep Curl Holds', rest: 20},
+    kettleTricep: {time: 40, name: 'Overhead Tricep Extension', rest: 20},
+    kettleSkullCrusher: {time: 40, name: 'Kettle Skull Crusher', rest: 20},
+    kettleCurlExtendTricep: {time: 40, name: 'Bicep Curl to Tricep Extension', rest: 20},
+    kettleArmSwing: {time: 40, name: 'Single Arm Curl Swing', rest: 20},
+    kettleChestPress: {time: 40, name: 'Chest Press', rest: 20},
+    kettleCooldown: {time: 30, name: 'Stretch arms', rest: 10},
 };
 var timer = '';
 var step = 0;
@@ -131,6 +142,8 @@ if (type === 'pushup') {
     document.querySelector('.steps').innerHTML = pullupWorkout(level || (day / 4 - 4850));
 } else if (type === 'situp') {
     document.querySelector('.steps').innerHTML = situpWorkout(level || (day / 4 - 4850));
+} else if (type === 'kettle') {
+    document.querySelector('.steps').innerHTML = kettleWorkout(level || (day / 4 - 4850));
 } else {
     document.querySelector('.steps').innerHTML = pushupWorkout(level || (day / 4 - 4850));
 }
@@ -306,6 +319,25 @@ function situpWorkout(level) {
     sets.splice(3, 0, sets[sets.length - 1]);
     sets.splice(3, 0, (sets[sets.length - 2]));
     sets = sets.concat(['shoulder', 'cobra', 'chest', 'congrats']);
+    var html = '';
+    level = Math.round(level);
+    if (level % 2 !== 0) {
+        level += 1;
+    }
+    for (var i = 0; i < sets.length; i += 1) {
+        var info = '';
+        if (data[sets[i]].hasOwnProperty('number')) {
+            info = level + data[sets[i]].number;
+        } else if (data[sets[i]].time) {
+            info = data[sets[i]].time + ' Seconds';
+        }
+        html += '<div>' + data[sets[i]].name + ' ' + info + '</div>';
+    }
+    return html;
+}
+
+function kettleWorkout(level) {
+    sets = ['kettleWarmup', 'kettleCurls', 'kettleCurlHolds', 'kettleCurls', 'kettleCurlHolds', 'kettleCurls', 'kettleCurlHolds', 'kettleTricep', 'kettleSkullCrusher', 'kettleTricep', 'kettleSkullCrusher', 'kettleTricep', 'kettleSkullCrusher', 'kettleCurlExtendTricep', 'kettleArmSwing', 'kettleArmSwing', 'kettleChestPress', 'kettleCooldown', 'congrats'];
     var html = '';
     level = Math.round(level);
     if (level % 2 !== 0) {
